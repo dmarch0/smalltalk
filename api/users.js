@@ -58,21 +58,24 @@ router.post("/login", (req, res) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (user) {
-        bcrypt.compare(req.body.password, user.password).then(isMatch => {
-          if (isMatch) {
-            const payload = {
-              id: user.id,
-              username: user.username
-            };
+        bcrypt
+          .compare(req.body.password, user.password)
+          .then(isMatch => {
+            if (isMatch) {
+              const payload = {
+                id: user.id,
+                username: user.username
+              };
 
-            jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) =>
-              res.json({ success: true, token: "Bearer " + token })
-            );
-          } else {
-            errors.password = "Password incorrect";
-            return res.status(400).json(error);
-          }
-        });
+              jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) =>
+                res.json({ success: true, token: token })
+              );
+            } else {
+              errors.password = "Password incorrect";
+              return res.status(400).json(errors);
+            }
+          })
+          .catch(err => console.log(err));
       } else {
         return res.status(400).json({ email: "Email not found" });
       }

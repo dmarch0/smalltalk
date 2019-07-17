@@ -35,3 +35,11 @@ export const loginUser = (formValues, history) => dispatch => {
       dispatch({ type: GET_ERRORS, payload: error.response.data });
     });
 };
+
+export const logoutUser = () => {
+  localStorage.removeItem("token");
+  setAuthToken(false);
+  return {
+    type: CLEAR_CURRENT_USER
+  };
+};

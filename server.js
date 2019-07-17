@@ -8,8 +8,9 @@ const cors = require("cors");
 //api route
 const users = require("./api/users");
 
-//db key
+//keys
 const db = require("./config/keys").mongo;
+const secret = require("./config/keys").secret;
 
 const app = express();
 
@@ -27,7 +28,31 @@ const port = process.env.PORT || 5000;
 
 app.use("/api/users", users);
 
-const io = socketio();
+const io = socketio(4000);
+
+io.use((socket, next) => {
+  if (socket.handshake.query && socket.handshake.query.token) {
+    jwt.verify(socket.handshake.query.token, secret, (err, decoded) => {
+      if (err) {
+        return next(new Error("Authentication error"));
+      } else {
+        socket.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    return next(new Error("Authentication error"));
+  }
+}).on("connection", socket => {
+  io.emit("message", {
+    text: `${socket.decoded.username} connected`,
+    date: Date.now(),
+    username: "Server"
+  });
+  socket.on("message", message => {
+    io.emit("message", message);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
