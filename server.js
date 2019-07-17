@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const socketio = require("socket.io");
+const jwt = require("jsonwebtoken");
 
 //api route
 const users = require("./api/users");
@@ -22,9 +24,7 @@ const port = process.env.PORT || 5000;
 
 app.use("/api/users", users);
 
-app.get("/", (req, res) => {
-  res.json({ msg: "test" });
-});
+const io = socketio();
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
