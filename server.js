@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 //api route
 const users = require("./api/users");
@@ -8,6 +9,9 @@ const users = require("./api/users");
 const db = require("./config/keys").mongo;
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 mongoose
   .connect(db)
