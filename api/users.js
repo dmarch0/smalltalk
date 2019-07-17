@@ -49,6 +49,7 @@ router.post("/register", (req, res) => {
 //@desc login user
 //@access public
 router.post("/login", (req, res) => {
+  console.log("listening");
   const { errors, isValid } = validateLoginInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);

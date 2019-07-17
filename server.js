@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const socketio = require("socket.io");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 //api route
 const users = require("./api/users");
@@ -14,6 +15,8 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(cors());
 
 mongoose
   .connect(db)

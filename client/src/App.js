@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import reducers from "./reducers";
+import Login from "./components/auth/Login";
+import setAuthToken from "./utils/setAuthToken";
+import { SET_CURRENT_USER } from "./actions/types";
+
+const middleware = [thunk];
+const initialState = {};
+
+const store = createStore(
+  reducers,
+  initialState,
+  compose(
+    applyMiddleware(...middleware),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
+);
+
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+  const decoded = jwt_decode(localStorage.token);
+  store.dispatch({ type: SET_CURRENT_USER, payload: decoded });
 }
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <Router>
+        <Route exact path="/login" component={Login} />
+      </Router>
+    </Provider>
+  );
+};
 
 export default App;
