@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import MessagesFeed from "./MessagesFeed";
 import MessageForm from "./MessageForm";
 import { addMessage, setSocket } from "../../actions/messagesActions";
+import { setTyping } from "../../actions/typingActions";
 
 const Chat = props => {
   useEffect(() => {
@@ -14,8 +15,10 @@ const Chat = props => {
         query: { token: token }
       })
       .on("message", message => {
-        console.log(message);
         props.addMessage(message);
+      })
+      .on("typing", username => {
+        props.setTyping(username);
       });
     props.setSocket(socket);
   }, []);
@@ -33,5 +36,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { addMessage, setSocket }
+  { addMessage, setSocket, setTyping }
 )(Chat);

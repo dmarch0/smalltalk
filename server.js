@@ -52,6 +52,10 @@ io.use((socket, next) => {
   socket.on("message", message => {
     io.emit("message", message);
   });
+  socket.on("typing", username => {
+    io.emit("typing", username);
+    console.log("typing", username);
+  });
 });
 
 app.listen(port, () => {

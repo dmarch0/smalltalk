@@ -14,6 +14,9 @@ const MessageForm = props => {
       >
         <div className="form-group">
           <Field
+            onChange={() => {
+              props.messages.socket.emit("typing", props.auth.user.username);
+            }}
             component="input"
             type="text"
             name="message"
@@ -30,7 +33,7 @@ const MessageForm = props => {
 const formConnected = reduxForm({ form: "message" })(MessageForm);
 
 const mapStateToProps = state => {
-  return {};
+  return { messages: state.messages, auth: state.auth };
 };
 
 export default connect(
