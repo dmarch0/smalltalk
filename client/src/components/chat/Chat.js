@@ -6,6 +6,7 @@ import MessagesFeed from "./MessagesFeed";
 import MessageForm from "./MessageForm";
 import { addMessage, setSocket } from "../../actions/messagesActions";
 import { setTyping } from "../../actions/typingActions";
+import { addUser, removeUser, setInitUsers } from "../../actions/usersActions";
 
 const Chat = props => {
   useEffect(() => {
@@ -16,12 +17,20 @@ const Chat = props => {
       })
       .on("message", message => {
         props.addMessage(message);
+        if (message.flag === "connection") {
+          //props.addUser(message.username);
+          props.setInitUsers(message.connectedUsers);
+        }
       })
       .on("typing", username => {
         props.setTyping(username);
+      })
+      .on("disconnect", username => {
+        props.removeUser(username);
       });
     props.setSocket(socket);
   }, []);
+
   return (
     <div>
       <MessagesFeed />
@@ -36,5 +45,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { addMessage, setSocket, setTyping }
+  { addMessage, setSocket, setTyping, addUser, removeUser, setInitUsers }
 )(Chat);

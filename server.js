@@ -29,7 +29,7 @@ const port = process.env.PORT || 5000;
 app.use("/api/users", users);
 
 const io = socketio(4000);
-
+let connectedUsers = [];
 io.use((socket, next) => {
   if (socket.handshake.query && socket.handshake.query.token) {
     jwt.verify(socket.handshake.query.token, secret, (err, decoded) => {
@@ -44,17 +44,28 @@ io.use((socket, next) => {
     return next(new Error("Authentication error"));
   }
 }).on("connection", socket => {
+  connectedUsers.push(socket.decoded.username);
   io.emit("message", {
     text: `${socket.decoded.username} connected`,
     date: Date.now(),
-    username: "Server"
+    username: "Server",
+    flag: "connection",
+    username: socket.decoded.username,
+    connectedUsers: connectedUsers
   });
   socket.on("message", message => {
     io.emit("message", message);
   });
   socket.on("typing", username => {
     io.emit("typing", username);
-    console.log("typing", username);
+  });
+  socket.on("disconnect", () => {
+    //console.log("disconnected!!!");
+    io.emit("disconnect", socket.decoded.username);
+    const newUsers = connectedUsers.filter(
+      user => user !== socket.decoded.username
+    );
+    connectedUsers = newUsers;
   });
 });
 

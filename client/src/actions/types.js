@@ -5,3 +5,6 @@ export const ADD_MESSAGE = "ADD_MESSAGE";
 export const SET_SOCKET = "SET_SOCKET";
 export const SET_TYPING = "SET_TYPING";
 export const CLEAR_TYPING = "CLEAR_TYPING";
+export const ADD_USER = "ADD_USER";
+export const REMOVE_USER = "REMOVE_USER";
+export const SET_INIT_USERS = "SET_INIT_USERS";

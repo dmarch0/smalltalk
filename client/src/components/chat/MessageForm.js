@@ -26,6 +26,7 @@ const MessageForm = props => {
         </div>
         <button>Send</button>
       </form>
+      {props.users.map(user => user)}
     </div>
   );
 };
@@ -33,7 +34,7 @@ const MessageForm = props => {
 const formConnected = reduxForm({ form: "message" })(MessageForm);
 
 const mapStateToProps = state => {
-  return { messages: state.messages, auth: state.auth };
+  return { messages: state.messages, auth: state.auth, users: state.users };
 };
 
 export default connect(
