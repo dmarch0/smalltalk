@@ -8,8 +8,10 @@ const MessageForm = props => {
   return (
     <div className="container">
       <form
+        className="mb-3"
         onSubmit={props.handleSubmit(formValues => {
           props.sendMessage(formValues.message);
+          props.reset();
         })}
       >
         <div className="form-group">
@@ -24,9 +26,8 @@ const MessageForm = props => {
             className="form-control form-control-lg"
           />
         </div>
-        <button>Send</button>
+        <button className="btn btn-info">Send</button>
       </form>
-      {props.users.map(user => user)}
     </div>
   );
 };

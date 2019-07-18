@@ -54,7 +54,28 @@ io.use((socket, next) => {
     connectedUsers: connectedUsers
   });
   socket.on("message", message => {
-    io.emit("message", message);
+    if (/^(\/pm)/.test(message.text)) {
+      const username = message.text.split(" ")[1];
+      const textToSend = message.text.split(" ")[2];
+      for (let socketId of Object.keys(io.sockets.sockets)) {
+        const socketReceiver = io.sockets.sockets[socketId];
+        if (socketReceiver.decoded.username === username) {
+          const messageToSend = { ...message };
+          messageToSend.text = textToSend;
+          messageToSend.private = true;
+          io.to(`${socketId}`).emit("message", messageToSend);
+          io.to(`${socket.id}`).emit("message", messageToSend);
+          return;
+        }
+      }
+      io.to(`${socket.id}`).emit("message", {
+        text: "User not found",
+        username: "Server",
+        date: Date.now
+      });
+    } else {
+      io.emit("message", message);
+    }
   });
   socket.on("typing", username => {
     io.emit("typing", username);

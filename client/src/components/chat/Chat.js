@@ -21,6 +21,8 @@ const Chat = props => {
           //props.addUser(message.username);
           props.setInitUsers(message.connectedUsers);
         }
+        const chatFeed = document.getElementById("chat-feed");
+        chatFeed.scrollTop = chatFeed.scrollHeight;
       })
       .on("typing", username => {
         props.setTyping(username);
@@ -32,15 +34,21 @@ const Chat = props => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <MessagesFeed />
       <MessageForm />
+      <h1>Connected users:</h1>
+      <ul className="list-group col-md-4">
+        {props.users.map(user => (
+          <li className="list-group-item">{user}</li>
+        ))}
+      </ul>
     </div>
   );
 };
 
 const mapStateToProps = state => {
-  return {};
+  return { users: state.users };
 };
 
 export default connect(

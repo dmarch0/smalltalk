@@ -19,11 +19,15 @@ const MessagesFeed = props => {
       <ul
         className="list-group list-group-flush"
         style={{ width: "100%", height: "300px", overflow: "scroll" }}
+        id="chat-feed"
       >
         {props.messages.messages.map((message, index) => (
           <li className="list-group-item" key={index}>
             <p className="lead">{message.username}</p>
-            {message.text}
+            {message.private ? <p>private</p> : null}
+            <p style={message.private ? { color: "purple" } : {}}>
+              {message.text}
+            </p>
             <p>
               <Moment format="hh:mm">{message.date}</Moment>
             </p>

@@ -9,7 +9,6 @@ export const sendMessage = text => (dispatch, getState) => {
 };
 
 export const addMessage = message => {
-  console.log(message);
   return { type: ADD_MESSAGE, payload: message };
 };
 
