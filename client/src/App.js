@@ -12,6 +12,7 @@ import { SET_CURRENT_USER } from "./actions/types";
 import { logoutUser } from "./actions/authActions";
 import Chat from "./components/chat/Chat";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import Register from "./components/auth/Register";
 
 const middleware = [thunk];
 const initialState = {};
@@ -46,6 +47,7 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
         <Switch>
           <ProtectedRoute exact path="/" component={Chat} />
         </Switch>
